@@ -1,9 +1,15 @@
-name: master
+name: pull-request
 
 on: 
-  push:
+  pull_request:
     branches:
       - master
+    type: 
+      - synchronize
+      - ready-for-review
+      - opened
+      - reopened
+
 
 jobs:
   install:
@@ -60,5 +66,5 @@ jobs:
         with:
           path: ./node_modules
           key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-      - run: npx nx affected --target=lint --base=origin/master --head=origin/master   --parallel=5
-      - run: npx nx affected --target=test --base=origin/master --head=origin/master   --parallel=5
+      - run: npx nx affected --target=lint --base=origin/master --head=origin/master  --parallel=5
+      - run: npx nx affected --target=test --base=origin/master --head=origin/master  --parallel=5
