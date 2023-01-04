@@ -1,0 +1,49 @@
+name: pull-request
+
+on: 
+  pull_request:
+    branches:
+      - master
+    type: 
+      - synchronize
+      - ready-for-review
+      - opened
+      - reopened
+
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16.15.1"
+      - run: npm ci
+
+  build:
+    runs-on: ubuntu-latest
+    needs: 
+      - install
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16.15.1"
+
+      - run: npx nx affected --target=build --parallel=3
+
+  test:
+    runs-on: ubuntu-latest
+    needs: 
+      - install
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - run: npx nx affected --target=lint --parallel=3
+      - run: npx nx affected --target=test --parallel=3
