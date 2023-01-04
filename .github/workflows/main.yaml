@@ -60,5 +60,5 @@ jobs:
         with:
           path: ./node_modules
           key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-      - run: npx nx affected --target=lint --parallel=5
-      - run: npx nx affected --target=test --parallel=5
+      - run: npx nx affected:packages --base=origin/master --head=origin/master --plain --target=lint --parallel=5
+      - run: npx nx affected:packages --base=origin/master --head=origin/master --plain --target=test --parallel=5
